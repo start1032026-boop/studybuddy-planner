@@ -5,10 +5,30 @@ function App() {
   const [subjects, setSubjects] = useState("");
   const [hours, setHours] = useState("");
 
-  const handleSubmit = () => {
-    console.log("Subjects:", subjects);
-    console.log("Hours per day:", hours);
-  };
+  const handleSubmit = async () => {
+
+  const subjectList = subjects.split(",");
+
+  try {
+    const response = await fetch("http://127.0.0.1:8000/generate-plan", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        subjects: subjectList,
+        hours_per_day: parseInt(hours)
+      })
+    });
+
+    const data = await response.json();
+
+    console.log("Backend response:", data);
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
   return (
     <div style={{ padding: "40px" }}>
